@@ -9,6 +9,8 @@ const restServer = express();
     {
         "string": <value>
     }
+
+    Test: curl -X PUT -H "Content-Type: application/json" -d '{ "string": "banan" }' localhost:8000
 */
 restServer.put('/', bodyParser.json(), (request, response) => {
     try {

@@ -13,12 +13,13 @@ const restServer = express();
     Test: curl -X PUT -H "Content-Type: application/json" -d '{ "string": "banan" }' localhost:8000
 */
 restServer.put('/', bodyParser.json(), (request, response) => {
+    let message;
     try {
-        return response.send({ string: request.body.string.split("").reverse().join("") });
+        message = { string: request.body.string.split("").reverse().join("") };
     } catch (error) {
-        response.status = 400;
-        return response.send();
+        response.status(400).json({ error: error.toString() });
     }
+    return response.send(message);
 });
 
 

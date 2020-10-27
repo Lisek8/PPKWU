@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const GraphemeSplitter = require('grapheme-splitter');
 
 const port = "8080";
 const restServer = express();
+const splitter = new GraphemeSplitter();
 
 function analyzeString(stringToAnalyze, responseBody) {
-    for (let char of stringToAnalyze.split("")) {
+    for (let char of splitter.splitGraphemes(stringToAnalyze)) {
         if (char.toLowerCase() !== char.toUpperCase()) {
             if (char === char.toUpperCase()) {
                 responseBody.uppercaseCount += 1;

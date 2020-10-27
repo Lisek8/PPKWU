@@ -31,3 +31,26 @@ Analyzes received string and returns:
     ]
 }
 ```
+
+##### Example
+
+###### Request
+```
+{
+    "string": "banan123ABC_;"
+}
+```
+
+###### Response
+```
+{
+    "lowercaseCount": 5,
+    "uppercaseCount": 3,
+    "numberCount": 3,
+    "specialCount": 2,
+    "specialUsed": [
+        "_",
+        ";"
+    ]
+}
+```

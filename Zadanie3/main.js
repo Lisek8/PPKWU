@@ -1,5 +1,9 @@
 const fs = require('fs');
 
+function virtulCalendarDataParser(calendarData) {
+  
+}
+
 function icsDataGenerator(calendarData) {
   const icsData = [];
   icsData.push("BEGIN:VCALENDAR");

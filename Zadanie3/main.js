@@ -16,8 +16,8 @@ function icsDataGenerator(calendarData) {
 
   calendarData.forEach(calendarEvent => {
     icsData.push("BEGIN:VEVENT");
-    icsData.push(`DTSTART:${calendarEvent.year}${calendarEvent.month}${calendarEvent.day}T000000Z`);
-    icsData.push(`DTEND:${calendarEvent.year}${calendarEvent.month}${calendarEvent.day}T235959Z`);
+    icsData.push(`DTSTART:${calendarEvent.year}${calendarEvent.month}${calendarEvent.day}T000000`);
+    icsData.push(`DTEND:${calendarEvent.year}${calendarEvent.month}${calendarEvent.day}T235959`);
     icsData.push(`SUMMARY:${calendarEvent.title}`);
     icsData.push("END:VEVENT");
   });

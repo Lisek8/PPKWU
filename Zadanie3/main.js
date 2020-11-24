@@ -1,16 +1,12 @@
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
-const http = require('http');
 const requestPromise = require('request-promise-native');
+const HTMLParser = require('node-html-parser');
 
 const port = "8080";
 const restServer = express();
 const weeiaCalendarUrl = 'http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php';
-
-function virtulCalendarDataParser(calendarData) {
-  
-}
 
 function icsDataGenerator(calendarData) {
   const icsData = [];
@@ -41,6 +37,21 @@ restServer.get('/calendar', bodyParser.json(), async (request, response) => {
   const apiData = await requestPromise({
     method: 'GET',
     uri: weeiaCalendarUrl + `?rok=${year}&miesiac=${month}`
+  });
+  const foundDays = [];
+  const parsed = HTMLParser.parse(apiData).querySelectorAll('.dzien');
+  parsed.forEach(element => {
+    element.childNodes.forEach(childElement => {
+      if (childElement.classNames != null && childElement.classNames.includes('active')) {
+        foundDays.push(childElement);
+      }
+    });
+  });
+  const events = [];
+  foundDays.forEach(calendarEvent => {
+    const eventDay = calendarEvent.childNodes[0].text;
+    const eventTitle = calendarEvent.childNodes[1].text;
+    console.log(eventDay + " " + eventTitle);
   });
 
   response.statusCode = 200;

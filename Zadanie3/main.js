@@ -1,4 +1,9 @@
 const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const port = "8080";
+const restServer = express();
 
 function virtulCalendarDataParser(calendarData) {
   
@@ -27,5 +32,6 @@ function icsDataGenerator(calendarData) {
   fs.writeFileSync("output.ics", icsData.join('\n'));
 }
 
-
-icsDataGenerator();
+restServer.listen(port, () => {
+  console.log(`Server listening on port ${port}.`);
+});

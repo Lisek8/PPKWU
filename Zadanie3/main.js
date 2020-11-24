@@ -2,6 +2,7 @@ const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
+const requestPromise = require('request-promise-native');
 
 const port = "8080";
 const restServer = express();
@@ -37,23 +38,13 @@ function icsDataGenerator(calendarData) {
 restServer.get('/calendar', bodyParser.json(), async (request, response) => {
   const year = '2020';
   const month = '03';
-  let apiData = '';
-  await http.get(weeiaCalendarUrl + `?rok=${year}&miesiac=${month}`, (apiResponse) => {
-    let data = '';
+  const apiData = await requestPromise({
+    method: 'GET',
+    uri: weeiaCalendarUrl + `?rok=${year}&miesiac=${month}`
+  });
 
-    apiResponse.on('data', (chunk) => {
-      data += chunk;
-    });
-
-    apiResponse.on('end', () => {
-      apiData = data;
-      console.log(data);
-    });
-  }).on('error', () => {});
-
-  response.writeHead(200, { 'Content-Type':'text/html'});
-  response.write(apiData);
-  response.end();
+  response.statusCode = 200;
+  return response.send(apiData);
 });
 
 restServer.listen(port, () => {

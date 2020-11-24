@@ -14,21 +14,16 @@ function icsDataGenerator(calendarData) {
   icsData.push("VERSION:2.0");
   icsData.push("PRODID://21599//PL");
 
-  // Example events for testing purposes
-  icsData.push("BEGIN:VEVENT");
-  icsData.push("DTSTART:20201110T150000Z");
-  icsData.push("DTEND:20201110T160000Z");
-  icsData.push("SUMMARY:Example event");
-  icsData.push("END:VEVENT");
-
-  icsData.push("BEGIN:VEVENT");
-  icsData.push("DTSTART:20201110T150000Z");
-  icsData.push("DTEND:20201110T160000Z");
-  icsData.push("SUMMARY:Example event2");
-  icsData.push("END:VEVENT");
+  calendarData.forEach(calendarEvent => {
+    icsData.push("BEGIN:VEVENT");
+    icsData.push(`DTSTART:${calendarEvent.year}${calendarEvent.month}${calendarEvent.day}T000000Z`);
+    icsData.push(`DTEND:${calendarEvent.year}${calendarEvent.month}${calendarEvent.day}T235959Z`);
+    icsData.push(`SUMMARY:${calendarEvent.title}`);
+    icsData.push("END:VEVENT");
+  });
   
   icsData.push("END:VCALENDAR");
-  fs.writeFileSync("output.ics", icsData.join('\n'));
+  return icsData.join('\n');
 }
 
 restServer.get('/calendar', bodyParser.json(), async (request, response) => {
@@ -51,11 +46,17 @@ restServer.get('/calendar', bodyParser.json(), async (request, response) => {
   foundDays.forEach(calendarEvent => {
     const eventDay = calendarEvent.childNodes[0].text;
     const eventTitle = calendarEvent.childNodes[1].text;
-    console.log(eventDay + " " + eventTitle);
+    events.push({
+      title: eventTitle,
+      day: eventDay,
+      month: month,
+      year: year
+    });
   });
 
   response.statusCode = 200;
-  return response.send(apiData);
+  response.set('Content-Type', 'text/calendar');
+  return response.send(icsDataGenerator(events));
 });
 
 restServer.listen(port, () => {

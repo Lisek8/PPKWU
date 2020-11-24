@@ -1,84 +1,29 @@
 # Mobile Calendar WEEIA
 
-## Obtaining data from API
+## Calendar data provider API
 
-Service address: `https://weeia.edu.p.lodz.pl/lib/ajax/service.php`
+Service address: `http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php`
 
-### Request
+## Enpoints
 
-#### Cookies
-- MoodleSessionweeia=\<moodleSessionKey>
+### /calendar
 
-#### Path parameters
-- sesskey=\<sessionkey>
-- info=(core_calendar_get_calendar_day_view / core_calendar_get_calendar_monthly_view / core_calendar_get_calendar_upcoming_view)
+#### GET
 
-#### Body
+Creates ics file which contains events from calendar from a month and year specified by request query parameters.
 
-##### Specification
-```
-[
-   {
-      "index": 0,
-      "methodname": <string>,
-      "args": {
-         ["year": <number>,]
-         ["month": <number>,]
-         ["day": <number>,]
-         "courseid": 1,
-         "categoryid": 0
-      }
-   }
-]
-```
+##### Request
+Query paramaters:
+- month (number from 1-12 range)
+- year (number)
 
-##### Example
-- core_calendar_get_calendar_upcoming_view
-```
-[
-  {
-    "index": 0,
-    "methodname": "core_calendar_get_calendar_upcoming_view",
-    "args": {
-      "courseid": 1,
-      "categoryid": 0
-    }
-  }
-]
-```
+##### Response
+Ics file format specified by [ICS documentation](https://tools.ietf.org/html/rfc5545)
 
-- core_calendar_get_calendar_day_view
-```
-[
-   {
-      "index": 0,
-      "methodname": "core_calendar_get_calendar_day_view",
-      "args": {
-         "year": 2020,
-         "month": 11,
-         "day": 10,
-         "courseid": 1,
-         "categoryid": 0
-      }
-   }
-]
-```
+#### Example
 
-- core_calendar_get_calendar_monthly_view
-```
-[
-   {
-      "index": 0,
-      "methodname": "core_calendar_get_calendar_monthly_view",
-      "args": {
-         "year": 2020,
-         "month": 3,
-         "courseid": 1,
-         "day": 1
-      }
-   }
-]
-```
+##### Request
+http://localhost:8080/calendar?year=2020&month=3
 
-### Response
-See [Response](calendars/response03.2020.json) for an example
+##### Response
+See [Response](calendars/calendar03.ics) for an example of a file that is a response

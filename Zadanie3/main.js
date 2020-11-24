@@ -27,8 +27,8 @@ function icsDataGenerator(calendarData) {
 }
 
 restServer.get('/calendar', bodyParser.json(), async (request, response) => {
-  const year = request.body.year;
-  let month = request.body.month.toString();
+  const year = request.query.year;
+  let month = request.query.month.toString();
   if (month.length == 1) {
     month = '0' + month;
   }

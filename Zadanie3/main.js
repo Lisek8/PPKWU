@@ -27,30 +27,26 @@ function icsDataGenerator(calendarData) {
 }
 
 restServer.get('/calendar', bodyParser.json(), async (request, response) => {
-  const year = '2020';
-  const month = '03';
+  const year = request.body.year;
+  let month = request.body.month.toString();
+  if (month.length == 1) {
+    month = '0' + month;
+  }
   const apiData = await requestPromise({
     method: 'GET',
     uri: weeiaCalendarUrl + `?rok=${year}&miesiac=${month}`
   });
-  const foundDays = [];
-  const parsed = HTMLParser.parse(apiData).querySelectorAll('.dzien');
-  parsed.forEach(element => {
+  const events = [];
+  HTMLParser.parse(apiData).querySelectorAll('.dzien').forEach(element => {
     element.childNodes.forEach(childElement => {
       if (childElement.classNames != null && childElement.classNames.includes('active')) {
-        foundDays.push(childElement);
+        events.push({
+          title: childElement.childNodes[1].text,
+          day: childElement.childNodes[0].text,
+          month: month,
+          year: year
+        });
       }
-    });
-  });
-  const events = [];
-  foundDays.forEach(calendarEvent => {
-    const eventDay = calendarEvent.childNodes[0].text;
-    const eventTitle = calendarEvent.childNodes[1].text;
-    events.push({
-      title: eventTitle,
-      day: eventDay,
-      month: month,
-      year: year
     });
   });
 

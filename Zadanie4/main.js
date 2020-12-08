@@ -12,7 +12,11 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
     method: 'GET',
     uri: panoramaFirmSearchUrl + '?k=' + escape('hydraulik') + '&l=' + escape('łódź')
   });
-  console.log(apiData);
+  HTMLParser.parse(apiData).querySelector('body').childNodes.forEach(element => {
+    if (element.rawTagName === 'script' && element.rawAttrs === 'type="text/javascript"') {
+      console.log(unescape(element.text.trim().split(';')[0].split(' = ')[1].trim()));
+    }
+  });
 });
 
 restServer.listen(port, () => {

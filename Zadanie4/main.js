@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const requestPromise = require('request-promise-native');
 const HTMLParser = require('node-html-parser');
 const fs = require('fs');
+const { json } = require('body-parser');
 
 const port = '8080';
 const restServer = express();
@@ -62,6 +63,10 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
     });
   });
   response.json(parsedData);
+});
+
+restServer.post('/vCard', bodyParser.json(), async (request, promise) => {
+
 });
 
 createVCard();

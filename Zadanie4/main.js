@@ -12,11 +12,27 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
     method: 'GET',
     uri: panoramaFirmSearchUrl + '?k=' + escape('hydraulik') + '&l=' + escape('łódź')
   });
-  HTMLParser.parse(apiData).querySelector('body').childNodes.forEach(element => {
+  let requestedData = [];
+  HTMLParser.parse(apiData).querySelector('body').childNodes.filter(element => {
     if (element.rawTagName === 'script' && element.rawAttrs === 'type="text/javascript"') {
-      console.log(unescape(element.text.trim().split(';')[0].split(' = ')[1].trim()));
+      requestedData = JSON.parse(element.text.trim().split(';')[0].split(' = ')[1].trim());
     }
   });
+  const parsedData = [];
+  requestedData.forEach(arrayElement => {
+    arrayElement.companies.forEach(company => {
+      parsedData.push({
+        name: company.name,
+        address: company.address,
+        www: company.contact.www,
+        email: company.contact.email,
+        phoneArea: company.contact.phone.area,
+        phoneNumber: company.contact.phone.number,
+        location: arrayElement.coordinates
+      });
+    });
+  });
+  response.json(parsedData);
 });
 
 restServer.listen(port, () => {

@@ -52,10 +52,10 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
       parsedData.push({
         name: company.name,
         address: company.address,
-        www: company.contact.www,
-        email: company.contact.email,
-        phoneArea: company.contact.phone.area,
-        phoneNumber: company.contact.phone.number,
+        www: company.contact != null ? company.contact.www : 'brak',
+        email: company.contact != null ? company.contact.email : 'brak',
+        phoneArea: company.contact != null ? company.contact.phone.area : 'brak',
+        phoneNumber: company.contact != null ? company.contact.phone.number : 'brak',
         location: arrayElement.coordinates
       });
     });

@@ -38,7 +38,7 @@ function createVCard(vcfData) {
 restServer.get('/search', bodyParser.json(), async (request, response) => {
   const apiData = await requestPromise({
     method: 'GET',
-    uri: panoramaFirmSearchUrl + '?k=' + escape('hydraulik') + '&l=' + escape('łódź')
+    uri: panoramaFirmSearchUrl + `?k=${request.query.proffession}`
   });
   let requestedData = [];
   HTMLParser.parse(apiData).querySelector('body').childNodes.filter(element => {
@@ -64,12 +64,21 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
 });
 
 restServer.get('/vCard', bodyParser.json(), async (request, response) => {
-  const vcfData = request.query;
-  for (let property in vcfData) {
-    vcfData[property] = unescape(vcfData[property]);
+  try {
+    const vcfData = request.query;
+    for (let property in vcfData) {
+      vcfData[property] = unescape(vcfData[property]);
+    }
+    fs.writeFileSync('output.vcf', createVCard(vcfData));
+    response.set('Content-Type', 'text/x-vcard');
+    response.sendFile(path.join(__dirname, 'output.vcf'));
+  } catch (error) {
+    response.sendStatus(500);
   }
-  fs.writeFileSync('output.vcf', createVCard(vcfData));
-  response.sendFile(path.join(__dirname, 'output.vcf'));
+});
+
+restServer.get('/', (request, response) => {
+  response.sendFile(path.join(__dirname + '/htmlPage' + '/index.html'));
 });
 
 restServer.listen(port, () => {

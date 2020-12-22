@@ -29,7 +29,7 @@
       const proffession = escape(document.getElementById("inputSearch").value);
       document.getElementById("content").innerHTML = '';
       const Http = new XMLHttpRequest();
-      Http.open("GET", `http://localhost:8080/search?proffession=${proffession}`);
+      Http.open("GET", `/search?proffession=${proffession}`);
       Http.send();
 
       Http.onreadystatechange = (e) => {
@@ -39,25 +39,25 @@
          element.innerHTML += `<div class="mb-2 p-2 shadow-sm">
           <h4>${company.name}</h4>
           <div class="row p-2">
-            <div class="fw-bold col-sm-1">Address</div>
+            <div class="fw-bold col-sm-2">Address</div>
             <div class="col-auto">${company.address}</div>
           </div>
           <div class="row p-2">
-            <div class="fw-bold col-sm-1">WWW</div>
+            <div class="fw-bold col-sm-2">WWW</div>
             <div class="col-auto">${company.www == null ? 'brak' : company.www}</div>
           </div>
           <div class="row p-2">
-            <div class="fw-bold col-sm-1">Email</div>
+            <div class="fw-bold col-sm-2">Email</div>
             <div class="col-auto">${company.email}</div>
           </div>
           <div class="row p-2">
-            <div class="fw-bold col-sm-1">Phone</div>
+            <div class="fw-bold col-sm-2">Phone</div>
             <div class="col-auto">${company.phoneArea != null && company.phoneArea !== 'brak' ? '(' + company.phoneArea + ')': ''}${company.phoneNumber}</div>
           </div>
           <div class="p-2">
-            <a href="https://maps.google.com/maps?&ll=${company.location.lat},${company.location.lon}">Mapa</a>
+            <a href="https://maps.google.com/maps?&ll=${company.location.lat},${company.location.lon}">Map</a>
           </div>
-          <a class="btn btn-primary" href="http://localhost:8080/vCard?name=${escape(company.name)}&address=${escape(company.address)}&www=${escape(company.www)}&email=${escape(company.email)}&phoneArea=${escape(company.phoneArea)}&phoneNumber=${escape(company.phoneNumber)}&lat=${escape(company.location.lat)}&lon=${escape(company.location.lon)}">vCard</a>
+          <a class="btn btn-primary" href="/vCard?name=${escape(company.name)}&address=${escape(company.address)}&www=${escape(company.www)}&email=${escape(company.email)}&phoneArea=${escape(company.phoneArea)}&phoneNumber=${escape(company.phoneNumber)}&lat=${escape(company.location.lat)}&lon=${escape(company.location.lon)}">vCard</a>
           </div>`;
        }
       }

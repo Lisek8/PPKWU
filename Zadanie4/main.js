@@ -63,8 +63,11 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
   response.json(parsedData);
 });
 
-restServer.post('/vCard', bodyParser.json(), async (request, response) => {
-  const vcfData = request.body;
+restServer.get('/vCard', bodyParser.json(), async (request, response) => {
+  const vcfData = request.query;
+  for (let property in vcfData) {
+    vcfData[property] = unescape(vcfData[property]);
+  }
   fs.writeFileSync('output.vcf', createVCard(vcfData));
   response.sendFile(path.join(__dirname, 'output.vcf'));
 });

@@ -4,6 +4,7 @@ const requestPromise = require('request-promise-native');
 const HTMLParser = require('node-html-parser');
 const fs = require('fs');
 const { json } = require('body-parser');
+const path = require('path');
 
 const port = '8080';
 const restServer = express();
@@ -27,7 +28,7 @@ function createVCard(vcfData) {
   vCardData.push(`GEO:geo:${vcfData.location.lat},${vcfData.location.lon}`);
   vCardData.push('END:VCARD');
 
-  fs.writeFileSync('output.vcf', vCardData.join('\n'));
+  return vCardData.join('\n');
 }
 
 restServer.get('/search', bodyParser.json(), async (request, response) => {
@@ -58,9 +59,10 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
   response.json(parsedData);
 });
 
-restServer.post('/vCard', bodyParser.json(), async (request, promise) => {
+restServer.get('/vCard', bodyParser.json(), async (request, response) => {
   const vcfData = request.body;
-  createVCard(vcfData);
+  fs.writeFileSync('output.vcf', createVCard(vcfData));
+  response.sendFile(path.join(__dirname, 'output.vcf'));
 });
 
 restServer.listen(port, () => {

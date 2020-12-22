@@ -9,37 +9,22 @@ const port = '8080';
 const restServer = express();
 const panoramaFirmSearchUrl = 'https://panoramafirm.pl/szukaj';
 
-function createVCard() {
-  const exampleObject = {
-    "name": "Fhu Nypel Usługi Hydrauliczne Łukasz Szydliński",
-    "address": "ul. Cieszkowskiego 4/27, 41-303 Dąbrowa Górnicza  śląskie",
-    "www": "http://Hydraulikdabrowagornicza.com",
-    "email": "brak",
-    "phoneArea": null,
-    "phoneNumber": "698095573",
-    "location": {
-        "lat": 50.31829,
-        "lon": 19.23723
-    }
-  };
-
-  addressParts = exampleObject.address.split(',');
-
+function createVCard(vcfData) {
+  addressParts = vcfData.address.split(',');
   const vCardData = [];
-
   vCardData.push('BEGIN:VCARD');
   vCardData.push('VERSION:3.0');
-  vCardData.push(`N:${exampleObject.name}`);
-  vCardData.push(`FN:${exampleObject.name}`);
-  vCardData.push(`ORG:${exampleObject.name}`);
-  vCardData.push(`TITLE:${exampleObject.name}`);
+  vCardData.push(`N:${vcfData.name}`);
+  vCardData.push(`FN:${vcfData.name}`);
+  vCardData.push(`ORG:${vcfData.name}`);
+  vCardData.push(`TITLE:${vcfData.name}`);
   vCardData.push(`ADR;TYPE=WORK,PREF:;;${addressParts[0]};${addressParts[1]}`);
-  vCardData.push(`TEL;TYPE=WORK,VOICE:${exampleObject.phoneNumber}`);
-  if (exampleObject.email !== 'brak') {
-    vCardData.push(`EMAIL;TYPE=WORK:${exampleObject.email}`);
+  vCardData.push(`TEL;TYPE=WORK,VOICE:${vcfData.phoneNumber}`);
+  if (vcfData.email !== 'brak') {
+    vCardData.push(`EMAIL;TYPE=WORK:${vcfData.email}`);
   }
-  vCardData.push(`URL:${exampleObject.www}`);
-  vCardData.push(`GEO:geo:${exampleObject.location.lat},${exampleObject.location.lon}`);
+  vCardData.push(`URL:${vcfData.www}`);
+  vCardData.push(`GEO:geo:${vcfData.location.lat},${vcfData.location.lon}`);
   vCardData.push('END:VCARD');
 
   fs.writeFileSync('output.vcf', vCardData.join('\n'));
@@ -74,10 +59,9 @@ restServer.get('/search', bodyParser.json(), async (request, response) => {
 });
 
 restServer.post('/vCard', bodyParser.json(), async (request, promise) => {
-
+  const vcfData = request.body;
+  createVCard(vcfData);
 });
-
-createVCard();
 
 restServer.listen(port, () => {
   console.log(`Server listening on port ${port}.`);

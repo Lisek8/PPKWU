@@ -23,6 +23,8 @@ function createVCard() {
     }
   };
 
+  addressParts = exampleObject.address.split(',');
+
   const vCardData = [];
 
   vCardData.push('BEGIN:VCARD');
@@ -31,7 +33,13 @@ function createVCard() {
   vCardData.push(`FN:${exampleObject.name}`);
   vCardData.push(`ORG:${exampleObject.name}`);
   vCardData.push(`TITLE:${exampleObject.name}`);
-  vCardData.push(`TEL;TYPE=WORK,VOICE:(111) 555-1212`);
+  vCardData.push(`ADR;TYPE=WORK,PREF:;;${addressParts[0]};${addressParts[1]}`);
+  vCardData.push(`TEL;TYPE=WORK,VOICE:${exampleObject.phoneNumber}`);
+  if (exampleObject.email !== 'brak') {
+    vCardData.push(`EMAIL;TYPE=WORK:${exampleObject.email}`);
+  }
+  vCardData.push(`URL:${exampleObject.www}`);
+  vCardData.push(`GEO:geo:${exampleObject.location.lat},${exampleObject.location.lon}`);
   vCardData.push('END:VCARD');
 
   fs.writeFileSync('output.vcf', vCardData.join('\n'));

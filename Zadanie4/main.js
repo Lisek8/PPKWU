@@ -20,12 +20,16 @@ function createVCard(vcfData) {
   vCardData.push(`ORG:${vcfData.name}`);
   vCardData.push(`TITLE:${vcfData.name}`);
   vCardData.push(`ADR;TYPE=WORK,PREF:;;${addressParts[0]};${addressParts[1]}`);
-  vCardData.push(`TEL;TYPE=WORK,VOICE:${vcfData.phoneNumber}`);
+  vCardData.push(`TEL;TYPE=WORK,VOICE:${vcfData.phoneNumber}`);vCardData.push(`TEL;TYPE=WORK,VOICE:${vcfData.phoneArea !== 'null' ? '(' + vcfData.phoneArea + ')' : ''}${vcfData.phoneNumber}`);
   if (vcfData.email !== 'brak') {
     vCardData.push(`EMAIL;TYPE=WORK:${vcfData.email}`);
   }
-  vCardData.push(`URL:${vcfData.www}`);
-  vCardData.push(`GEO:geo:${vcfData.location.lat},${vcfData.location.lon}`);
+  if (vcfData.www !== 'null' && vcfData.www !== 'brak') {
+    vCardData.push(`URL:${vcfData.www}`);
+  }
+  if (vcfData.location != null) {
+    vCardData.push(`GEO:geo:${vcfData.location.lat},${vcfData.location.lon}`);
+  }
   vCardData.push('END:VCARD');
 
   return vCardData.join('\n');
